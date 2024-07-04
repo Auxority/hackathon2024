@@ -16,9 +16,21 @@
 <body>
     <div class="container mt-3">
         <div class="row">
+
+
             <div class="col-md-6">
                 <label for="startDate" class="form-label">Start Date:</label>
-                <input type="date" class="form-control" id="startDate" max="2020-12-31" min="2020-01-01">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <button type="button" id="previousDate" class="btn btn-outline-secondary">&lt;</button>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control" id="startDate" max="2020-12-31" min="2020-01-01">
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button" id="nextDate" class="btn btn-outline-secondary">&gt;</button>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-6">
@@ -131,12 +143,34 @@
             });
         }
 
-        document.getElementById('startDate').addEventListener('change', updateChart);
+        const changeDate = (date, amount) => {
+            const newDate = new Date(startDate.value);
+            newDate.setDate(newDate.getDate() + amount)
+            return newDate.toISOString().split('T')[0]
+        }
+
+        const startDate = document.getElementById('startDate');
+        startDate.addEventListener('change', updateChart);
         document.querySelectorAll('select[name="overview"]').forEach(input => {
             input.addEventListener('change', updateChart);
         });
+        document.getElementById('previousDate').addEventListener("click", () => {
+            const result = changeDate(startDate.value, -1)
+            if (result >= "2020-01-01") {
+                startDate.value = result;
+                updateChart();
+            }
 
-        document.getElementById('startDate').value = '2020-01-01';
+        });
+        document.getElementById('nextDate').addEventListener("click", () => {
+            const result = changeDate(startDate.value, 1)
+            if (result <= "2020-12-31") {
+                startDate.value = result;
+                updateChart();
+            }
+        });
+
+        startDate.value = '2020-01-01';
         updateChart();
 
     </script>
