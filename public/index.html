@@ -36,6 +36,34 @@
                 </div>
             </div>
         </div>
+        <div class="card mt-5 row" style="max-width: 350px;">
+            <div class="card-header bg-info">
+                <h5 class="mb-0">Productie</h5>
+            </div>
+            <div class="card-body bg-light">
+                <div class="d-flex flex-column align-items-center my-3">
+                    <img src="https://path-to-your-sun-icon.png" alt="Zonne-Energie" class="mb-2" style="width: 50px; height: 50px;">
+                    <div>
+                        <p class="mb-1 fw-bold">150 MWh</p>
+                        <p class="mb-0">10% van totale energie</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-column align-items-center my-3">
+                    <img src="https://path-to-your-wind-sea-icon.png" alt="Wind-Energie (zee)" class="mb-2" style="width: 50px; height: 50px;">
+                    <div>
+                        <p class="mb-1 fw-bold">200 MWh</p>
+                        <p class="mb-0">15% van totale energie</p>
+                    </div>
+                </div>
+                <div class="d-flex flex-column align-items-center my-3">
+                    <img src="https://path-to-your-wind-land-icon.png" alt="Wind-Energie (land)" class="mb-2" style="width: 50px; height: 50px;">
+                    <div>
+                        <p class="mb-1 fw-bold">2000 MWh</p>
+                        <p class="mb-0">75% van totale energie</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row mt-3">
             <div class="col">
                 <canvas id="myChart" width="400" height="150"></canvas>
@@ -75,6 +103,7 @@
                 download: true,
                 header: true,
                 complete: function (results) {
+                    updateCards(results.data, startDate);
                     const chartData = prepareDataForChart(results.data, startDate);
                     if (myChart) {
                         myChart.destroy();
@@ -105,6 +134,29 @@
                     });
                 }
             });
+        }
+
+        function updateCards(data, startDate) {
+            const timeSpan = document.querySelector('input[name="overview"]:checked').value;
+            const filteredData = data.filter(entry => {
+                const entryDate = new Date(entry.datetime);
+                const endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + parseInt(timeSpan)));
+                return entryDate >= new Date(startDate) && entryDate <= new Date(endDate);
+            });
+
+            const totalOffshoreWindMwh = filteredData.reduce((acc, entry) => acc + parseInt(entry.offshore_wind_mwh), 0);
+            const totalOnshoreWindMwh = filteredData.reduce((acc, entry) => acc + parseInt(entry.onshore_wind_mwh), 0);
+            const totalSolarMwh = filteredData.reduce((acc, entry) => acc + parseInt(entry.solar_mwh), 0);
+            const totalEnergy = totalOffshoreWindMwh + totalOnshoreWindMwh + totalSolarMwh;
+
+            document.querySelector('.card:nth-of-type(2) .d-flex:nth-of-type(1) p:nth-of-type(1)').textContent = `${totalSolarMwh} MWh`;
+            document.querySelector('.card:nth-of-type(2) .d-flex:nth-of-type(1) p:nth-of-type(2)').textContent = `${((totalSolarMwh / totalEnergy) * 100).toFixed(0)}% van totale energie`;
+
+            document.querySelector('.card:nth-of-type(2) .d-flex:nth-of-type(2) p:nth-of-type(1)').textContent = `${totalOffshoreWindMwh} MWh`;
+            document.querySelector('.card:nth-of-type(2) .d-flex:nth-of-type(2) p:nth-of-type(2)').textContent = `${((totalOffshoreWindMwh / totalEnergy) * 100).toFixed(0)}% van totale energie`;
+
+            document.querySelector('.card:nth-of-type(2) .d-flex:nth-of-type(3) p:nth-of-type(1)').textContent = `${totalOnshoreWindMwh} MWh`;
+            document.querySelector('.card:nth-of-type(2) .d-flex:nth-of-type(3) p:nth-of-type(2)').textContent = `${((totalOnshoreWindMwh / totalEnergy) * 100).toFixed(0)}% van totale energie`;
         }
 
         document.getElementById('startDate').addEventListener('change', updateChart);
