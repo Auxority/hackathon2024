@@ -24,21 +24,15 @@
                 <label for="overview" class="form-label">Overview:</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="overview" id="days" value="1" checked>
-                    <label class="form-check-label" for="days">
-                        Days
-                    </label>
+                    <label class="form-check-label" for="days">Day</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="overview" id="weeks" value="7">
-                    <label class="form-check-label" for="weeks">
-                        Weeks
-                    </label>
+                    <label class="form-check-label" for="weeks">Week</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="overview" id="months" value="30">
-                    <label class="form-check-label" for="months">
-                        Months
-                    </label>
+                    <label class="form-check-label" for="months">Month</label>
                 </div>
             </div>
         </div>
@@ -55,7 +49,7 @@
             const filteredData = parsedData.filter(entry => {
                 let timeSpan = document.querySelector('input[name="overview"]:checked').value;
                 const entryDate = new Date(entry.datetime);
-                const endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + timeSpan));
+                const endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + parseInt(timeSpan)));
                 return entryDate >= new Date(startDate) && entryDate <= new Date(endDate);
             });
 
@@ -86,13 +80,22 @@
                         myChart.destroy();
                     }
                     const ctx = document.getElementById('myChart').getContext('2d');
+                    const unit = document.querySelector('input[name="overview"]:checked').id === 'days' ? 'hour' : 'day';
                     myChart = new Chart(ctx, {
                         type: 'line',
                         data: chartData,
                         options: {
                             scales: {
                                 x: {
-                                    type: 'time'
+                                    type: 'time',
+                                    time: {
+                                        unit: unit
+                                    },
+                                    ticks: {
+                                        autoSkip: false,
+                                        maxRotation: 60,
+                                        minRotation: 60
+                                    }
                                 },
                                 y: {
                                     beginAtZero: true
