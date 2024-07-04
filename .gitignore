@@ -1,0 +1,5 @@
+.DS_Store
+!readme.md
+data
+venv
+node_modules
