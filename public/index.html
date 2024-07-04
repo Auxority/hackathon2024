@@ -58,13 +58,43 @@
 
             return {
                 labels: labels,
-                datasets: [{
-                    label: 'Offshore Wind MWh',
-                    data: offshoreWindMwh,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
+                datasets: [
+                    {
+                        label: 'Offshore Wind MWh',
+                        data: offshoreWindMwh,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Onshore Wind MWh',
+                        data: filteredData.map(entry => entry.onshore_wind_mwh),
+                        fill: false,
+                        borderColor: 'rgb(255, 99, 132)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Solar MWh',
+                        data: filteredData.map(entry => entry.solar_mwh),
+                        fill: false,
+                        borderColor: 'rgb(54, 162, 235)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Demand MWh',
+                        data: filteredData.map(entry => entry.total_demand_mwh),
+                        fill: false,
+                        borderColor: 'rgb(255, 205, 86)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Surplus/Deficit MWh',
+                        data: filteredData.map(entry => entry.surplus_mwh),
+                        fill: false,
+                        borderColor: 'rgb(201, 203, 207)',
+                        tension: 0.1
+                    }
+                ]
             };
         }
 
