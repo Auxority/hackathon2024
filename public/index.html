@@ -12,6 +12,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .container {
+            margin-top: 10px;
+        }
+
+        .progress-bar-vertical {
+            width: 150px;
+            min-height: 500px;
+            display: flex;
+            align-items: flex-end;
+            margin-right: 20px;
+        }
+
+        .progress-bar-vertical .progress-bar {
+            width: 100%;
+            height: 0;
+            -webkit-transition: height 0.6s ease;
+            -o-transition: height 0.6s ease;
+            transition: height 0.6s ease;
+        }
+    </style>
 </head>
 
 <body>
@@ -44,7 +65,7 @@
                 </div>
                 <div class="card-body bg-light">
                     <div class="d-flex flex-column align-items-center my-3">
-                        <i class="bi bi-brightness-low h1"></i>
+                        <i class="bi bi-sun h1"></i>
                         <div>
                             <p class="mb-1 fw-bold">150 MWh</p>
                             <p class="mb-0">10% van totale energie</p>
@@ -72,27 +93,37 @@
                 </div>
                 <div class="card-body bg-light">
                     <div class="d-flex flex-column align-items-center my-3">
-                        <img src="https://path-to-your-lightbulb-icon.png" alt="Max Gebruik" class="mb-2"
-                            style="width: 50px; height: 50px;">
+                        <i class="bi bi-lightbulb h1"></i>
                         <div>
                             <p class="mb-1 fw-bold">3500 MWh</p>
                             <p class="mb-0">Max Gebruik</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column align-items-center my-3">
-                        <img src="https://path-to-your-lightbulb-icon.png" alt="Huidig Gebruik" class="mb-2"
-                            style="width: 50px; height: 50px;">
+                        <i class="bi bi-lightning h1"></i>
                         <div>
                             <p class="mb-1 fw-bold">2000 MWh</p>
                             <p class="mb-0">Huidig Gebruik</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column align-items-center my-3">
-                        <img src="https://path-to-your-factory-icon.png" alt="Fabriek Load" class="mb-2"
-                            style="width: 50px; height: 50px;">
+                        <i class="bi bi-buildings h1"></i>
                         <div>
                             <p class="mb-1 fw-bold">75%</p>
                             <p class="mb-0">Net Belasting</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card text-center ms-5 p-0 mt-5 fs-4" style="max-width: 350px;">
+                <div class="card-header bg-info">
+                    <h5 class="mb-0">Energiebalans</h5>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="progress progress-bar-vertical mx-auto">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height: 100%;">
+                            <span class="sr-only">MWh</span>
                         </div>
                     </div>
                 </div>
