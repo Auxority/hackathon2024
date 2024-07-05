@@ -39,23 +39,18 @@
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-6">
+                <button type="button" id="previousDate" class="btn btn-outline-secondary">&lt;</button>
                 <label for="startDate" class="form-label">Start Date:</label>
                 <input type="date" class="form-control" id="startDate" max="2020-12-31" min="2020-01-01">
+                <button type="button" id="nextDate" class="btn btn-outline-secondary">&gt;</button>
             </div>
             <div class="col-md-6">
                 <label for="overview" class="form-label">Overview:</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="overview" id="days" value="1" checked>
-                    <label class="form-check-label" for="days">Day</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="overview" id="weeks" value="7">
-                    <label class="form-check-label" for="weeks">Week</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="overview" id="months" value="30">
-                    <label class="form-check-label" for="months">Month</label>
-                </div>
+                <select name="overview" class="form-select">
+                    <option id="days" value="1" selected>Day</option>
+                    <option id="weeks" value="7">Week</option>
+                    <option id="months" value="30">Month</option>
+                </select>
             </div>
         </div>
         <div class="row">
@@ -140,7 +135,7 @@
 
         function prepareDataForChart(parsedData, startDate) {
             const filteredData = parsedData.filter(entry => {
-                let timeSpan = document.querySelector('input[name="overview"]:checked').value;
+                let timeSpan = document.querySelector('select[name="overview"] option:checked').value;
                 const entryDate = new Date(entry.datetime);
                 const endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + parseInt(timeSpan)));
                 return entryDate >= new Date(startDate) && entryDate <= new Date(endDate);
@@ -204,7 +199,7 @@
                         myChart.destroy();
                     }
                     const ctx = document.getElementById('myChart').getContext('2d');
-                    const unit = document.querySelector('input[name="overview"]:checked').id === 'days' ? 'hour' : 'day';
+                    const unit = document.querySelector('select[name="overview"] option:checked').id === 'days' ? 'hour' : 'day';
                     myChart = new Chart(ctx, {
                         type: 'line',
                         data: chartData,
@@ -233,7 +228,7 @@
 
         function updateCards(data, startDate) {
             const filteredData = data.filter(entry => {
-                let timeSpan = document.querySelector('input[name="overview"]:checked').value;
+                let timeSpan = document.querySelector('select[name="overview"] option:checked').value;
                 const entryDate = new Date(entry.datetime);
                 const endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + parseInt(timeSpan)));
                 return entryDate >= new Date(startDate) && entryDate <= new Date(endDate);
@@ -255,12 +250,34 @@
             document.querySelector('.card:nth-of-type(2) .card-body div:nth-of-type(3) p:nth-of-type(1)').textContent = `${Math.round(totalDemandMwh / peakDemand * 100)}%`;
         }
 
-        document.getElementById('startDate').addEventListener('change', updateChart);
-        document.querySelectorAll('input[name="overview"]').forEach(input => {
+        const changeDate = (date, amount) => {
+            const newDate = new Date(startDate.value);
+            newDate.setDate(newDate.getDate() + amount)
+            return newDate.toISOString().split('T')[0]
+        }
+        const startDate = document.getElementById('startDate');
+        startDate.addEventListener('change', updateChart);
+
+        document.querySelectorAll('select[name="overview"]').forEach(input => {
             input.addEventListener('change', updateChart);
         });
+        document.getElementById('previousDate').addEventListener("click", () => {
+            const result = changeDate(startDate.value, -1)
+            if (result >= "2020-01-01") {
+                startDate.value = result;
+                updateChart();
+            }
 
-        document.getElementById('startDate').value = '2020-01-01';
+        });
+        document.getElementById('nextDate').addEventListener("click", () => {
+            const result = changeDate(startDate.value, 1)
+            if (result <= "2020-12-31") {
+                startDate.value = result;
+                updateChart();
+            }
+        });
+
+        startDate.value = '2020-01-01';
         updateChart();
 
     </script>
